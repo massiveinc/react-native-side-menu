@@ -11,12 +11,6 @@
     "type": "git",
     "url": "git@github.com:react-native-community/react-native-side-menu.git"
   },
-  "keywords": [
-    "react-native",
-    "react-component",
-    "ios",
-    "sidebar"
-  ],
   "author": "Alexey Kureev <kureev-mail@ya.ru> (https://github.com/Kureev)",
   "license": "MIT",
   "bugs": {

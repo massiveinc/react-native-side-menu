@@ -149,8 +149,8 @@ export default class SideMenu extends React.Component {
     const ref = sideMenu => (this.sideMenu = sideMenu);
     const style = [
       styles.frontView,
-      { width, height },
-      this.props.animationStyle(this.state.left),
+      { width, height, flex: this.isWeb ? 4 : 1 },
+      !this.props.isWeb ? this.props.animationStyle(this.state.left) : null,
     ];
 
     return (
@@ -241,8 +241,11 @@ export default class SideMenu extends React.Component {
       { left: this.state.width - this.state.openMenuOffset } :
       { right: this.state.width - this.state.openMenuOffset };
 
+    const flexValue = this.isWeb ? 1 : 4;
+    const menuFlex = { flex: this.props.isOpen ? flexValue : 0 };
+
     const menu = (
-      <View style={[styles.menu, boundryStyle]}>
+      <View style={[styles.menu, menuFlex]}>
         {this.props.menu}
       </View>
     );

@@ -19,7 +19,7 @@ export default StyleSheet.create({
   },
   menu: {
     // ...absoluteStretch,
-    flex: 1,
+    flex: 0,
   },
   frontView: {
     flex: 1,
