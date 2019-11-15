@@ -28,7 +28,7 @@ type Props = {
   onAnimationComplete: Function,
   onStartShouldSetResponderCapture: Function,
   isOpen: bool,
-  showOverlay: bool,
+  isWeb: bool,
   bounceBackOnOverdraw: bool,
   autoClosing: bool
 };
@@ -69,14 +69,14 @@ export default class SideMenu extends React.Component {
   state: State;
   prevLeft: number;
   isOpen: boolean;
-  showOverlay: boolean;
+  isWeb: boolean;
 
   constructor(props: Props) {
     super(props);
 
     this.prevLeft = 0;
     this.isOpen = !!props.isOpen;
-    this.showOverlay = !!props.showOverlay;
+    this.isWeb = !!props.isWeb;
 
     const initialMenuPositionMultiplier = props.menuPosition === 'right' ? -1 : 1;
     const openOffsetMenuPercentage = props.openMenuOffset / deviceScreen.width;
@@ -156,7 +156,7 @@ export default class SideMenu extends React.Component {
     return (
       <Animated.View style={style} ref={ref} {...this.responder.panHandlers}>
         {this.props.children}
-        {this.showOverlay && overlay}
+        {!this.isWeb && overlay}
       </Animated.View>
     );
   }
@@ -276,7 +276,7 @@ SideMenu.propTypes = {
   onAnimationComplete: PropTypes.func,
   onStartShouldSetResponderCapture: PropTypes.func,
   isOpen: PropTypes.bool,
-  showOverlay: PropTypes.bool,
+  isWeb: PropTypes.bool,
   bounceBackOnOverdraw: PropTypes.bool,
   autoClosing: PropTypes.bool,
 };
@@ -306,7 +306,7 @@ SideMenu.defaultProps = {
   }),
   onAnimationComplete: () => { },
   isOpen: false,
-  showOverlay: true,
+  isWeb: false,
   bounceBackOnOverdraw: true,
   autoClosing: true,
 };

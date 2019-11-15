@@ -13,18 +13,21 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     // ...absoluteStretch,
+    display: 'flex',
     justifyContent: 'center',
+    flexDirection: 'row',
   },
   menu: {
     // ...absoluteStretch,
+    flex: 1,
   },
   frontView: {
     flex: 1,
-    position: 'absolute',
-    left: 0,
-    top: 0,
+    // position: 'absolute',
+    // left: 0,
+    // top: 0,
     backgroundColor: 'transparent',
-    overflow: 'hidden',
+    // overflow: 'hidden',
   },
   overlay: {
     // ...absoluteStretch,
