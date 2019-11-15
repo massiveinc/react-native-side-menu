@@ -241,7 +241,7 @@ export default class SideMenu extends React.Component {
       { left: this.state.width - this.state.openMenuOffset } :
       { right: this.state.width - this.state.openMenuOffset };
 
-    const flexValue = this.isWeb ? 1 : 4;
+    const flexValue = this.isWeb ? 1 : 2;
     const menuFlex = { flex: this.props.isOpen ? flexValue : 0 };
 
     const menu = (
