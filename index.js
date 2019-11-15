@@ -276,6 +276,7 @@ SideMenu.propTypes = {
   onAnimationComplete: PropTypes.func,
   onStartShouldSetResponderCapture: PropTypes.func,
   isOpen: PropTypes.bool,
+  showOverlay: PropTypes.bool,
   bounceBackOnOverdraw: PropTypes.bool,
   autoClosing: PropTypes.bool,
 };
@@ -305,6 +306,7 @@ SideMenu.defaultProps = {
   }),
   onAnimationComplete: () => { },
   isOpen: false,
+  showOverlay: true,
   bounceBackOnOverdraw: true,
   autoClosing: true,
 };
