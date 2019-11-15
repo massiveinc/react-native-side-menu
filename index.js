@@ -101,7 +101,7 @@ export default class SideMenu extends React.Component {
       left,
     };
 
-    this.state.left.addListener(({value}) => this.props.onSliding(Math.abs((value - this.state.hiddenMenuOffset) / (this.state.openMenuOffset - this.state.hiddenMenuOffset))));
+    this.state.left.addListener(({ value }) => this.props.onSliding(Math.abs((value - this.state.hiddenMenuOffset) / (this.state.openMenuOffset - this.state.hiddenMenuOffset))));
   }
 
   componentWillMount(): void {
@@ -153,7 +153,7 @@ export default class SideMenu extends React.Component {
     return (
       <Animated.View style={style} ref={ref} {...this.responder.panHandlers}>
         {this.props.children}
-        {overlay}
+        {/* {overlay} */}
       </Animated.View>
     );
   }
@@ -287,10 +287,10 @@ SideMenu.defaultProps = {
   disableGestures: false,
   menuPosition: 'left',
   hiddenMenuOffset: 0,
-  onMove: () => {},
+  onMove: () => { },
   onStartShouldSetResponderCapture: () => true,
-  onChange: () => {},
-  onSliding: () => {},
+  onChange: () => { },
+  onSliding: () => { },
   animationStyle: value => ({
     transform: [{
       translateX: value,
@@ -300,7 +300,7 @@ SideMenu.defaultProps = {
     toValue: value,
     friction: 8,
   }),
-  onAnimationComplete: () => {},
+  onAnimationComplete: () => { },
   isOpen: false,
   bounceBackOnOverdraw: true,
   autoClosing: true,
