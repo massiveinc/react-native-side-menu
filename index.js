@@ -9,7 +9,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import styles from './styles';
+import styles from '../styles';
 
 type WindowDimensions = { width: number, height: number };
 
@@ -28,7 +28,7 @@ type Props = {
   onAnimationComplete: Function,
   onStartShouldSetResponderCapture: Function,
   isOpen: bool,
-  isWeb: bool,
+  isMobile: bool,
   bounceBackOnOverdraw: bool,
   autoClosing: bool
 };
@@ -55,6 +55,7 @@ type State = {
 const deviceScreen: WindowDimensions = Dimensions.get('window');
 const barrierForward: number = deviceScreen.width / 4;
 
+
 function shouldOpenMenu(dx: number): boolean {
   return dx > barrierForward;
 }
@@ -69,14 +70,14 @@ export default class SideMenu extends React.Component {
   state: State;
   prevLeft: number;
   isOpen: boolean;
-  isWeb: boolean;
+  isMobile: boolean;
 
   constructor(props: Props) {
     super(props);
 
     this.prevLeft = 0;
     this.isOpen = !!props.isOpen;
-    this.isWeb = !!props.isWeb;
+    this.isMobile = !!props.isMobile;
 
     const initialMenuPositionMultiplier = props.menuPosition === 'right' ? -1 : 1;
     const openOffsetMenuPercentage = props.openMenuOffset / deviceScreen.width;
@@ -104,7 +105,9 @@ export default class SideMenu extends React.Component {
       left,
     };
 
-    this.state.left.addListener(({ value }) => this.props.onSliding(Math.abs((value - this.state.hiddenMenuOffset) / (this.state.openMenuOffset - this.state.hiddenMenuOffset))));
+    this.state.left.addListener(({ value }) =>
+      this.props.onSliding(Math.abs((value - this.state.hiddenMenuOffset) /
+        (this.state.openMenuOffset - this.state.hiddenMenuOffset))));
   }
 
   componentWillMount(): void {
@@ -125,8 +128,8 @@ export default class SideMenu extends React.Component {
 
   onLayoutChange(e: Event) {
     const { width, height } = e.nativeEvent.layout;
-    const openMenuOffset = width * this.state.openOffsetMenuPercentage;
-    const hiddenMenuOffset = width * this.state.hiddenMenuOffsetPercentage;
+    const openMenuOffset = deviceScreen.width * this.state.openOffsetMenuPercentage;
+    const hiddenMenuOffset = 0;
     this.setState({ width, height, openMenuOffset, hiddenMenuOffset });
   }
 
@@ -149,15 +152,14 @@ export default class SideMenu extends React.Component {
     const ref = sideMenu => (this.sideMenu = sideMenu);
     const style = [
       styles.frontView,
-      { width, height, flex: this.isWeb ? 4 : 1 },
-      !this.props.isWeb ? this.props.animationStyle(this.state.left) : null,
+      { width, height, flex: this.props.isMobile ? 5 : 4 },
     ];
 
     return (
-      <Animated.View style={style} ref={ref} {...this.responder.panHandlers}>
+      <View style={style} ref={ref} {...this.responder.panHandlers}>
         {this.props.children}
-        {!this.isWeb && overlay}
-      </Animated.View>
+        {this.props.isMobile && overlay}
+      </View>
     );
   }
 
@@ -237,12 +239,18 @@ export default class SideMenu extends React.Component {
   }
 
   render(): React.Element<void, void> {
-    const boundryStyle = this.props.menuPosition === 'right' ?
-      { left: this.state.width - this.state.openMenuOffset } :
-      { right: this.state.width - this.state.openMenuOffset };
+    const width = Dimensions.get('window').width;
+    let webFlexSize = 2;
 
-    const flexValue = this.isWeb ? 1 : 2;
-    const menuFlex = { flex: this.props.isOpen ? flexValue : 0 };
+    if (width >= 1025) {
+      webFlexSize = 1;
+    } else if (width < 1024 && width >= 768) {
+      webFlexSize = 3;
+    } else if (width < 768) {
+      webFlexSize = 2;
+    }
+
+    const menuFlex = { flex: this.isMobile ? 4 : webFlexSize };
 
     const menu = (
       <View style={[styles.menu, menuFlex]}>
@@ -250,14 +258,22 @@ export default class SideMenu extends React.Component {
       </View>
     );
 
+    const gapRatio = 1 / 5;
+    const mobileContainerStyles = {
+      width: (width * 2) - (width * gapRatio),
+      right: width - (width * gapRatio),
+    };
+    const animateStyle = this.props.isMobile ? this.props.animationStyle(this.state.left) : null;
+    const mobileStyles = this.props.isMobile ? mobileContainerStyles : null;
+
     return (
-      <View
-        style={styles.container}
+      <Animated.View
+        style={[styles.container, mobileStyles, animateStyle]}
         onLayout={this.onLayoutChange}
       >
-        {menu}
+        {(this.props.isOpen || this.props.isMobile) && menu}
         {this.getContentView()}
-      </View>
+      </Animated.View >
     );
   }
 }
@@ -279,7 +295,7 @@ SideMenu.propTypes = {
   onAnimationComplete: PropTypes.func,
   onStartShouldSetResponderCapture: PropTypes.func,
   isOpen: PropTypes.bool,
-  isWeb: PropTypes.bool,
+  isMobile: PropTypes.bool,
   bounceBackOnOverdraw: PropTypes.bool,
   autoClosing: PropTypes.bool,
 };
@@ -290,7 +306,7 @@ SideMenu.defaultProps = {
   edgeHitWidth: 60,
   children: null,
   menu: null,
-  openMenuOffset: deviceScreen.width * (2 / 3),
+  openMenuOffset: deviceScreen.width * 4 / 5,
   disableGestures: false,
   menuPosition: 'left',
   hiddenMenuOffset: 0,
@@ -309,7 +325,7 @@ SideMenu.defaultProps = {
   }),
   onAnimationComplete: () => { },
   isOpen: false,
-  isWeb: false,
+  isMobile: false,
   bounceBackOnOverdraw: true,
   autoClosing: true,
 };
